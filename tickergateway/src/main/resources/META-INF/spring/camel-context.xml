@@ -7,22 +7,22 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
-    <packageScan>
-    	<package>se.rl.tickergateway</camel:package>
-    </packageScan>
+  	<packageScan>
+    	<package>se.rl.tickergateway</package>
+    </packageScan>  
     
     <route id="ReutersGateway">
       <from uri="file:src/data/reuters?noop=true"/>
       <split>
       	<tokenize token="\n"/>
       	<log message="Ticker from reuters ${body}"/>
-      	<setHeader headerName="from">
-      		<constant>Reuters</constant>
-      	</setHeader>
       	<unmarshal>
       		<csv delimiter=","/>
       	</unmarshal>
       	<to uri="freemarker:transform/reutersToCanonical.ftl"/>
+      	<setHeader headerName="from">
+      		<constant>Reuters</constant>
+      	</setHeader>
       	<to uri="activemq:queue:ticker"/> 
       </split>
     </route>
@@ -36,4 +36,7 @@
 	<bean id="activemq" class="org.apache.activemq.camel.component.ActiveMQComponent">
 	    <property name="connectionFactory" ref="jmsConnectionFactory"/>
 	</bean>
+	
+  <!-- Required to find CXF http transport etc for Nasdaq WS gateway.. -->
+  <import resource="classpath:META-INF/cxf/cxf.xml"/>
 </beans>

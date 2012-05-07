@@ -10,7 +10,7 @@ class TickerTechRoute extends GroovyRouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-		from("quartz://callTickerTech?cron=0/5+*+*+*+*+?").autoStartup(true).routeId("TickerTechGateway")
+		from("quartz://callTickerTech?cron=0/30+*+*+*+*+?").autoStartup(false).routeId("TickerTechGateway")
 			.enrich("http://localhost/tickertech.json")
 			.convertBodyTo(String.class)
 			.split().method(FeedSplitter.class, "split")

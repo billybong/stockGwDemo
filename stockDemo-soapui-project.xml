@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project name="stockDemo" resourceRoot="" soapui-version="4.0.1.1" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="NasdaqServiceSoap" type="wsdl" bindingName="{http://www.nasdaq.com/services/}NasdaqServiceSoap" soapVersion="1_1" anonymous="optional" definition="file:/home/bilsj/training_and_books/redpill_training/Camel_Breakfast_seminarium/stockGwDemo/tickergateway/src/main/resources/ws/nasdaq.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="file:/home/bilsj/training_and_books/redpill_training/Camel_Breakfast_seminarium/stockGwDemo/tickergateway/src/main/resources/ws/nasdaq.wsdl"><con:part><con:url>file:/home/bilsj/training_and_books/redpill_training/Camel_Breakfast_seminarium/stockGwDemo/tickergateway/src/main/resources/ws/nasdaq.wsdl</con:url><con:content><![CDATA[<wsdl:definitions name="nasdaq" targetNamespace="http://www.nasdaq.com/services/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:tns="http://www.nasdaq.com/services/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+  <wsdl:types>
+    <xsd:schema targetNamespace="http://www.nasdaq.com/services/" elementFormDefault="qualified">
+      <xsd:element name="TransmitStockUpdate">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Feed">
+              <xsd:complexType>
+                <xsd:sequence>
+                  <xsd:element name="dailyLow" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                  <xsd:element name="dailyHigh" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                  <xsd:element name="current" type="xsd:int" minOccurs="1" maxOccurs="1"/>
+                </xsd:sequence>
+                <xsd:attribute name="timestamp" type="xsd:dateTime" use="required"/>
+                <xsd:attribute name="currency" type="xsd:string" use="required"/>
+                <xsd:attribute name="symbol" type="xsd:string" use="required"/>
+              </xsd:complexType>
+            </xsd:element>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+      <xsd:element name="TransmitStockUpdateResponse">
+        <xsd:complexType>
+          <xsd:sequence>
+            <xsd:element name="Status" type="xsd:string"/>
+          </xsd:sequence>
+        </xsd:complexType>
+      </xsd:element>
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="TransmitStockUpdateRequest">
+    <wsdl:part name="parameters" element="tns:TransmitStockUpdate"/>
+  </wsdl:message>
+  <wsdl:message name="TransmitStockUpdateResponse">
+    <wsdl:part name="parameters" element="tns:TransmitStockUpdateResponse"/>
+  </wsdl:message>
+  <wsdl:portType name="StockServices">
+    <wsdl:operation name="TransmitStockUpdate">
+      <wsdl:input message="tns:TransmitStockUpdateRequest"/>
+      <wsdl:output message="tns:TransmitStockUpdateResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="NasdaqServiceSoap" type="tns:StockServices">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="TransmitStockUpdate">
+      <soap:operation soapAction="http://www.nasdaq.com/services/TransmitStockUpdate"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="NasdaqService">
+    <wsdl:port name="StockPort" binding="tns:NasdaqServiceSoap">
+      <soap:address location="http://localhost:8080/tickergateway"/>
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/nasdaqService</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://www.nasdaq.com/services/TransmitStockUpdate" name="TransmitStockUpdate" bindingOperationName="TransmitStockUpdate" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/nasdaqService</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:ser="http://www.nasdaq.com/services/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <ser:TransmitStockUpdate>
+         <ser:Feed timestamp="2012-04-08:10.00.00" currency="SEK" symbol="ERC">
+            <ser:dailyLow>5</ser:dailyLow>
+            <ser:dailyHigh>40</ser:dailyHigh>
+            <ser:current>20</ser:current>
+         </ser:Feed>
+      </ser:TransmitStockUpdate>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://www.nasdaq.com/services/TransmitStockUpdate"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer/></con:soapui-project>

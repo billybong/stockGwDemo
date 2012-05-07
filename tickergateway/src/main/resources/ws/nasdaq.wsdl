@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions name="nasdaq"
+	targetNamespace="http://www.nasdaq.com/services/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:tns="http://www.nasdaq.com/services/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/">
+	<wsdl:types>
+		<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.nasdaq.com/services/" elementFormDefault="qualified">
+			<xsd:element name="TransmitStockUpdate">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Feed">
+							<xsd:complexType>
+								<xsd:sequence>
+									<xsd:element name="dailyLow" type="xsd:int" minOccurs="1"
+										maxOccurs="1" />
+									<xsd:element name="dailyHigh" type="xsd:int" minOccurs="1"
+										maxOccurs="1" />
+									<xsd:element name="current" type="xsd:int" minOccurs="1"
+										maxOccurs="1" />
+								</xsd:sequence>
+								<xsd:attribute name="timestamp" type="xsd:dateTime" use="required" />
+								<xsd:attribute name="currency" type="xsd:string" use="required" />
+								<xsd:attribute name="symbol" type="xsd:string" use="required" />
+							</xsd:complexType>
+						</xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+			<xsd:element name="TransmitStockUpdateResponse">
+				<xsd:complexType>
+					<xsd:sequence>
+						<xsd:element name="Status" type="xsd:string"></xsd:element>
+					</xsd:sequence>
+				</xsd:complexType>
+			</xsd:element>
+		</xsd:schema>
+	</wsdl:types>
+	<wsdl:message name="TransmitStockUpdateRequest">
+		<wsdl:part name="parameters" element="tns:TransmitStockUpdate"></wsdl:part>
+	</wsdl:message>
+	<wsdl:message name="TransmitStockUpdateResponse">
+		<wsdl:part name="parameters" element="tns:TransmitStockUpdateResponse"></wsdl:part>
+	</wsdl:message>
+	<wsdl:portType name="StockServices">
+		<wsdl:operation name="TransmitStockUpdate">
+			<wsdl:input message="tns:TransmitStockUpdateRequest"></wsdl:input>
+			<wsdl:output message="tns:TransmitStockUpdateResponse"></wsdl:output>
+		</wsdl:operation>
+	</wsdl:portType>
+	<wsdl:binding name="NasdaqServiceSoap" type="tns:StockServices">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<wsdl:operation name="TransmitStockUpdate">
+			<soap:operation soapAction="http://www.nasdaq.com/services/TransmitStockUpdate" />
+			<wsdl:input>
+				<soap:body use="literal" />
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+			</wsdl:output>
+		</wsdl:operation>
+	</wsdl:binding>
+	<wsdl:service name="NasdaqService">
+		<wsdl:port name="StockPort" binding="tns:NasdaqServiceSoap">
+			<soap:address location="http://localhost:8080/tickergateway" />
+		</wsdl:port>
+	</wsdl:service>
+</wsdl:definitions>

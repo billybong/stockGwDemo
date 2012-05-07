@@ -24,6 +24,9 @@ class BackEndrouter extends RouteBuilder {
 }
 
 class Transformer {  
+  /**
+   * Reformats to JSON by navigating XML tree
+   */
   def transform(xmlString: String) = {
     val xml = XML.loadString(xmlString)
     val json = ("stock" -> 
