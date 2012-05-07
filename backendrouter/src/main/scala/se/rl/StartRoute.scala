@@ -5,6 +5,8 @@ import org.apache.camel.scala.dsl.builder.RouteBuilderSupport
 import org.apache.activemq.camel.component.ActiveMQComponent
 import org.apache.activemq.ActiveMQConnectionFactory
 
+import scala.collection.JavaConversions._
+
 /**
  * A Main to run Camel
  */
@@ -16,18 +18,11 @@ object StartRoute extends RouteBuilderSupport {
     main.enableHangupSupport();
     
     //Add activeMQ component
-    var cf = new ActiveMQConnectionFactory()
-    cf.setBrokerURL("tcp://localhost:61616")
+    main.getCamelContexts().foreach(_.addComponent("activemq", ActiveMQComponent.activeMQComponent("tcp://localhost:61616")));
     
-    var amqComponent = new ActiveMQComponent()
-    amqComponent.setConnectionFactory(cf)
-    
-    val contextIt = main.getCamelContexts().iterator();
-    while (contextIt.hasNext()) {
-    	contextIt.next().addComponent("activemq", amqComponent);
-    }
-    
+    //Add our routes
     main.addRouteBuilder(new BackEndrouter)
+    
     // must use run to start the main application
     main.run();
   }
