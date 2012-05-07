@@ -1,0 +1,4 @@
+{"feeds":[
+	{"currency":"USD","symbol":"IBM","timestamp":"2001-12-31T12:00:00","dailyLow":"70","dailyHigh":"100","current":"89"},
+	{"currency":"USD","symbol":"HP","timestamp":"2001-12-31T12:00:00","dailyLow":"70","dailyHigh":"100","current":"89"}
+]}

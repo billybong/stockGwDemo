@@ -1,0 +1,123 @@
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Stomp test</title>
+    
+    <!--  INIT -->
+    <link rel="stylesheet" type="text/css" href="css/stylesheet.css" />
+    <script type="text/javascript" src='js/jquery.js'></script>
+    <script type="text/javascript" src="js/stomple.js"></script>    
+</head>
+<body><p>
+	<button id="disBtn" onclick='disconnect();'>Disconnect</button>
+	<button id="cntBtn" onclick='subscribe();'>Subscribe</button>
+	<div id="content">
+		<table id="stockTable">
+			<thead>
+				<tr>
+					<th>Stock</th>
+					<th>Value</th>
+					<th>Currency</th>
+					<th>From</th>
+					<th>Entered</th>
+				</tr>
+			</thead>
+			<tbody>
+			</tbody>
+		</table>
+	
+	</div>
+	<script type="text/javascript">
+
+	  var msgHandler = {
+				fn: function(msg) {
+					var clock = formatDate(new Date(), '%H:%m:%s');
+					var feed = JSON.parse(msg.body);
+					$("<tr><td>" + feed.stock.name + "</td><td>" + 
+							feed.stock.value + "</td><td>" + 
+							feed.stock.currency + "</td><td>" + 
+							msg.headers.from + "</td><td>" +
+							clock + "</td></tr>").prependTo("#stockTable > tbody");
+				}
+	  }
+	
+	if (!Stomple) {
+		  alert("Your browser doesn't support Stomple. Google Chrome does.");
+	  } else {
+	      //Stomple.debug = true;
+		  var client = Stomple.create_client({
+			  url: "ws://localhost:61614/stomp",
+			  destination: "/topic/web",
+			  login: "guest",
+			  passcode: "guest",
+				socketOpen: function() {
+					console.log("socket opened");
+				},
+		        
+		        socketMessage: function(msg) {
+					console.log("socket msg");
+					console.log(msg);
+			    },
+		        
+		        socketClose: function(e) {
+					console.log("socket close");
+					console.log(e);
+			    },
+		        
+				socketError: function() {
+					console.log("socket error");
+					console.log(client.websocket);
+					return false;
+				}
+			  
+		  });
+
+		  subscribe();
+	  }
+	
+	  function disconnect() {
+		  client.disconnect({success: function(){console.log("dis");}, failure: function(){console.log(42);}});
+		  alert('Disconnected');
+	  }
+	  
+	  function subscribe(){
+		  
+		  client.subscribe({
+				handler: msgHandler.fn,
+				thisObj: msgHandler,
+
+				success: function() {//did subscription succeed?
+					console.log("sub ok..");
+				},
+				failure: function(reason) {//did subscription fail?
+					console.log(reason);
+				}
+		  });
+	  }
+	  
+	  function formatDate(date, fmt) {
+			    function pad(value) {
+			        return (value.toString().length < 2) ? '0' + value : value;
+			    }
+			    return fmt.replace(/%([a-zA-Z])/g, function (_, fmtCode) {
+			        switch (fmtCode) {
+			        case 'Y':
+			            return date.getUTCFullYear();
+			        case 'M':
+			            return pad(date.getUTCMonth() + 1);
+			        case 'd':
+			            return pad(date.getUTCDate());
+			        case 'H':
+			            return pad(date.getHours());
+			        case 'm':
+			            return pad(date.getUTCMinutes());
+			        case 's':
+			            return pad(date.getUTCSeconds());
+			        default:
+			            throw new Error('Unsupported format code: ' + fmtCode);
+			        }
+			    });
+	  }
+	</script>    
+</body>
+</html>

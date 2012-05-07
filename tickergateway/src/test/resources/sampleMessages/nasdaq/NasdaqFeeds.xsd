@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://nasdaq.com/1.0/feeds" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:nas="http://nasdaq.com/1.0/feeds">
+
+    <complexType name="FeedType">
+    	<sequence>
+    		<element name="dailyLow" type="int" minOccurs="1" maxOccurs="1"/>
+    		<element name="dailyHigh" type="int" minOccurs="1" maxOccurs="1"/>
+    		<element name="current" type="int" minOccurs="1" maxOccurs="1"/>
+    	</sequence>
+    	<attribute name="timestamp" type="dateTime" use="required"/>
+    	<attribute name="currency" type="string" use="required"/>
+    	<attribute name="symbol" type="string" use="required"/>
+    </complexType>
+
+    <element name="Feed" type="nas:FeedType"/>
+</schema>
