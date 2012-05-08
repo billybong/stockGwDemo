@@ -7,26 +7,25 @@
        http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
   <camelContext xmlns="http://camel.apache.org/schema/spring">
-  	<packageScan>
-    	<package>se.rl.tickergateway</package>
-    </packageScan>  
-    
+    <packageScan>
+        <package>se.rl.tickergateway</package>
+    </packageScan>
     <route id="ReutersGateway">
-      <from uri="file:src/data/reuters?noop=true"/>
-      <split>
-      	<tokenize token="\n"/>
-      	<log message="Ticker from reuters ${body}"/>
-      	<unmarshal>
-      		<csv delimiter=","/>
-      	</unmarshal>
-      	<to uri="freemarker:transform/reutersToCanonical.ftl"/>
-      	<setHeader headerName="from">
-      		<constant>Reuters</constant>
-      	</setHeader>
-      	<to uri="activemq:queue:ticker"/> 
-      </split>
+        <from uri="file:src/data/reuters?noop=true"/>
+        <split>
+            <tokenize token="\n"></tokenize>
+            <log message="Ticker from reuters ${body}"/>
+            <unmarshal>
+                <csv delimiter=","/>
+            </unmarshal>
+            <to uri="freemarker:transform/reutersToCanonical.ftl"/>
+            <setHeader headerName="from">
+                <constant>Reuters</constant>
+            </setHeader>
+            <to uri="activemq:queue:ticker"/>
+        </split>
     </route>
-  </camelContext>
+</camelContext>
 
 
    <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
