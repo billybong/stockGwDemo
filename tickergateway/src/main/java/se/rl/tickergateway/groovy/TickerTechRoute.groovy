@@ -11,7 +11,7 @@ class TickerTechRoute extends GroovyRouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-		from("quartz://callTickerTech?cron=0/10+*+*+*+*+?").autoStartup(false).routeId("TickerTechGateway")
+		from("quartz://callTickerTech?cron=0/10+*+*+*+*+?").autoStartup(true).routeId("TickerTechGateway")
 			.enrich("http://localhost/tickertech.json")
 			.convertBodyTo(String.class) //Required as http endpoint returns non cacheable InputStream
 			.split().method(FeedSplitter.class, "split")
