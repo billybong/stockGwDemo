@@ -1,0 +1,4 @@
+To make the TickerTech gateway idempotent, add:
+
+.idempotentConsumer(simple('${body[symbol]}:${body[timestamp]}'), MemoryIdempotentRepository.memoryIdempotentRepository()) //Key = i.e. IBM:2012-05-06:...
+.log('Ticker ${body[symbol]}:${body[timestamp]} passed idempotency test')

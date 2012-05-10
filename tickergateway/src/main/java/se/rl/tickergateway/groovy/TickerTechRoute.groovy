@@ -11,16 +11,14 @@ class TickerTechRoute extends GroovyRouteBuilder {
 
 	@Override
 	public void configure() throws Exception {
-		from("quartz://callTickerTech?cron=0/10+*+*+*+*+?").autoStartup(true).routeId("TickerTechGateway")
+		from("quartz://callTickerTech?cron=0/10+*+*+*+*+?").autoStartup(false).routeId("TickerTechGateway")
 			.enrich("http://localhost/tickertech.json")
 			.convertBodyTo(String.class) //Required as http endpoint returns non cacheable InputStream
 			.split().method(FeedSplitter.class, "split")
 				.log('Incoming ticker from TickerTech ${body}')
-				.idempotentConsumer(simple('${body[symbol]}:${body[timestamp]}'), MemoryIdempotentRepository.memoryIdempotentRepository()) //Key = i.e. IBM:2012-05-06:...
-				.log('Ticker ${body[symbol]}:${body[timestamp]} passed idempotency test')
 				.setHeader("from").constant('TickerTech')
 				.bean(Transformer, "transform")
-				.to("activemq:queue:ticker")
+				.to("activemq:ticker")
 	}
 }
 

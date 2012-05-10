@@ -11,7 +11,7 @@
         <package>se.rl.tickergateway</package>
     </packageScan>
     <route id="ReutersGateway">
-        <from uri="file:src/data/reuters?noop=true"/>
+        <from uri="file:src/data/reuters"/>
         <split>
             <tokenize token="\n"></tokenize>
             <log message="Ticker from reuters ${body}"/>
@@ -22,7 +22,7 @@
             <setHeader headerName="from">
                 <constant>Reuters</constant>
             </setHeader>
-            <to uri="activemq:queue:ticker"/>
+            <to uri="activemq:ticker"/>
         </split>
     </route>
 </camelContext>

@@ -4,11 +4,13 @@ import org.apache.camel.builder.RouteBuilder;
 
 public class NasdaqWsRoute extends RouteBuilder {
 
-	private static final String wsEndpoint = "cxf:http://0.0.0.0:8080/nasdaqService" +
+	private String wsEndpoint = "cxf:http://0.0.0.0:8080/nasdaqService" +
 											"?wsdlURL=ws/nasdaq.wsdl" +
 											"&dataFormat=PAYLOAD";
 	
-	private static final String okResponse = "<TransmitStockUpdateResponse xmlns=\"http://www.nasdaq.com/services/\">" +
+	private String amqEndpoint = "activemq:ticker";
+	
+	private static final String OK_RESPONSE = "<TransmitStockUpdateResponse xmlns=\"http://www.nasdaq.com/services/\">" +
 												"<Status>OK</Status>" +
 											 "</TransmitStockUpdateResponse>";
 	
@@ -19,7 +21,27 @@ public class NasdaqWsRoute extends RouteBuilder {
 			.log("Incoming ticker from Nasdaq: \n${body}")
 			.to("xslt:transform/nasdaqToCanonical.xsl")
 			.setHeader("from").constant("Nasdaq")
-			.inOnly("activemq:ticker") //inOnly as JMS would otherwise expect request/reply
-			.transform(constant(okResponse)); //For response
+			.log("After transformation: \n${body}")
+			.inOnly(amqEndpoint) //inOnly as JMS would otherwise expect request/reply
+			.transform(constant(OK_RESPONSE)); //For response
 	}
+
+	public void setWsEndpoint(String wsEndpoint) {
+		this.wsEndpoint = wsEndpoint;
+	}
+
+	public void setAmqEndpoint(String amqEndpoint) {
+		this.amqEndpoint = amqEndpoint;
+	}
+
+	public String getWsEndpoint() {
+		return wsEndpoint;
+	}
+
+	public String getAmqEndpoint() {
+		return amqEndpoint;
+	}
+	
+	
+	
 }

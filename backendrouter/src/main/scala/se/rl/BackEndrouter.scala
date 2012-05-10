@@ -29,7 +29,7 @@ class WebTransformer {
   /**
    * Transforms to JSON String by navigating XML tree
    */
-  def transform(xml: Node) = {
+  def transform(xml: Node) : String= {
     pretty(render( 
         ("stock" -> 
     		("name" -> (xml \ "stockName").text) ~ 

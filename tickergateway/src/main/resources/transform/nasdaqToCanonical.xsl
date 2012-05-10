@@ -1,7 +1,7 @@
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0"
                 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                 xmlns:nas="http://www.nasdaq.com/services/"
-        exclude-result-prefixes="xsi">
+        exclude-result-prefixes="xsi nas">
     <xsl:output method="xml" omit-xml-declaration="yes" indent="yes" undeclare-prefixes="yes"/>
 
     <xsl:template match="/">
