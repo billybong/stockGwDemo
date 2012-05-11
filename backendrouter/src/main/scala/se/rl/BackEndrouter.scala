@@ -5,6 +5,7 @@ import scala.xml.XML
 import net.liftweb.json._
 import net.liftweb.json.JsonDSL._
 import scala.xml.Node
+import org.apache.camel.Exchange
 
 class BackEndrouter extends RouteBuilder {
    
@@ -19,6 +20,7 @@ class BackEndrouter extends RouteBuilder {
    // wiretap to our web, reformat to json
    "seda:toWeb" ==> {
      id("webWiretapRoute")
+     setHeader("stock", ((e: Exchange) => (e.getIn.getBody(classOf[Node]) \ "stockName").text))
      bean(new WebTransformer)
      log("Wiretapping to web..: \n${body}")
      to("activemq:topic:web")

@@ -13,15 +13,6 @@ public class NasdaqRouteTest extends CamelTestSupport {
 	private static final String MOCK_FROM = "direct:nasdaq";
 	private static final String MOCK_TO = "mock:queue";
 	
-    private static final String EXPECTED_BODY = "<stockTicker xmlns=\"http://mycorp.stocks.com\">" +
-													"<time>2012-04-08:10.00.00</time>" +
-													"<stockName>ERIC</stockName>" +
-													"<price currency=\"SEK\">" +
-													"<current>20</current>" +
-													"</price>" +
-												"</stockTicker>";
-    
-    
     private static final String SAMPLE_REQUEST = "<TransmitStockUpdate xmlns=\"http://www.nasdaq.com/services/\">"+
 											         "<Feed timestamp=\"2012-04-08:10.00.00\" currency=\"SEK\" symbol=\"ERIC\">" +
 											            "<dailyLow>5</dailyLow>" +
@@ -29,6 +20,15 @@ public class NasdaqRouteTest extends CamelTestSupport {
 											            "<current>20</current>" +
 											         "</Feed>" +
 											      "</TransmitStockUpdate>";
+	
+	
+    private static final String EXPECTED_BODY = "<stockTicker xmlns=\"http://mycorp.stocks.com\">" +
+													"<time>2012-04-08:10.00.00</time>" +
+													"<stockName>ERIC</stockName>" +
+													"<price currency=\"SEK\">" +
+														"<current>20</current>" +
+													"</price>" +
+												"</stockTicker>";
 
     @Test
     public void testHappyPath() throws Exception {

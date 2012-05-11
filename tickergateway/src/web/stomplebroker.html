@@ -9,6 +9,9 @@
     <script type="text/javascript" src="js/stomple.js"></script>    
 </head>
 <body><p>
+	<label for="inputText">Subscribe to: </label>
+		<input type="text" id="inputText">
+	<br>
 	<button id="disBtn" onclick='disconnect();'>Disconnect</button>
 	<button id="cntBtn" onclick='subscribe();'>Subscribe</button>
 	<div id="content">
@@ -28,7 +31,7 @@
 	
 	</div>
 	<script type="text/javascript">
-
+	
 	  var msgHandler = {
 				fn: function(msg) {
 					var clock = formatDate(new Date(), '%H:%m:%s');
@@ -71,20 +74,33 @@
 				}
 			  
 		  });
-
-		  subscribe();
 	  }
 	
 	  function disconnect() {
+		  client.unsubscribe({
+			  			destination: "/topic/web"
+				  });
 		  client.disconnect({success: function(){console.log("dis");}, failure: function(){console.log(42);}});
 		  alert('Disconnected');
 	  }
 	  
 	  function subscribe(){
+
+		  var selectorString = "stock IS NOT NULL";
+		  var stock = $('#inputText').val()
+		  if(stock){
+			  	
+				selectorString = "stock='" + stock + "'";
+		  }
 		  
 		  client.subscribe({
 				handler: msgHandler.fn,
 				thisObj: msgHandler,
+				options: {
+			         	     headers: {
+				         	     selector: selectorString
+			                 }
+			             },
 
 				success: function() {//did subscription succeed?
 					console.log("sub ok..");
