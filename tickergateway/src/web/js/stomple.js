@@ -1056,12 +1056,14 @@
                     break;
                 case "MESSAGE":
                 	console.log("received message")
-                    subs = this.subscribers[headers.destination];
+                    //subs = this.subscribers[headers.destination];
+                	subs = this.subscribers["/topic/web.>"];
                 	console.log("subscribers: " + this.subscribers)
                     if (subs) {
                     	console.log("subscribers found : " + subs)
                         for (i=0,N=subs.length;i<N;i+=1) {
                             sub = subs[i];
+                            console.log("subscriber: " + sub)
                             sub.handler.call(sub.thisObj || globalObject,f);
                         }
                     }

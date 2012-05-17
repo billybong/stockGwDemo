@@ -21,23 +21,20 @@ class BackEndrouter extends RouteBuilder {
    "seda:toWeb" ==> {
      id("webWiretapRoute")
      setHeader("stock", ((e: Exchange) => (e.getIn.getBody(classOf[Node]) \ "stockName").text))
-     bean(new WebTransformer)
+     transform(xmlToJson)
      log("Wiretapping to web..: \n${body}")
-     to("activemq:topic:web")
+     setHeader("CamelJmsDestinationName", simple("web.${header.from}.${header.stock}"))
+     to("activemq:topic:dummy")
    }
-}
-
-class WebTransformer {  
-  /**
-   * Transforms to JSON String by navigating XML tree
-   */
-  def transform(xml: Node) : String= {
-    pretty(render( 
-        ("stock" -> 
-    		("name" -> (xml \ "stockName").text) ~ 
-    		("value" -> (xml \\ "current").text) ~ 
-    		("currency" -> (xml \\ "@currency").text)
-    	)
-    ))
-  }
+   
+   def xmlToJson(e: Exchange) : String = {
+		val xml = e.getIn().getBody(classOf[Node])
+		
+		compact(render( 
+	        "stock" -> 
+	    		("name" -> (xml \ "stockName").text) ~ 
+	    		("value" -> (xml \\ "current").text) ~ 
+	    		("currency" -> (xml \\ "@currency").text)
+    	))
+   }
 }

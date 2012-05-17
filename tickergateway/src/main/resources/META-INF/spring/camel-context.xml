@@ -13,7 +13,7 @@
     <route id="ReutersGateway">
         <from uri="file:src/data/reuters"/>
         <split>
-            <tokenize token="\n"></tokenize>
+            <tokenize token="\n"/>
             <log message="Ticker from reuters ${body}"/>
             <unmarshal>
                 <csv delimiter=","/>

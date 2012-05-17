@@ -23,6 +23,7 @@
 					<th>Currency</th>
 					<th>From</th>
 					<th>Entered</th>
+					<th>+/-</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,16 +32,50 @@
 	
 	</div>
 	<script type="text/javascript">
-	
+
+	  var topicName = "/topic/web.>";
+
+	  	
 	  var msgHandler = {
 				fn: function(msg) {
 					var clock = formatDate(new Date(), '%H:%m:%s');
 					var feed = JSON.parse(msg.body);
-					$("<tr><td>" + feed.stock.name + "</td><td>" + 
-							feed.stock.value + "</td><td>" + 
-							feed.stock.currency + "</td><td>" + 
-							msg.headers.from + "</td><td>" +
-							clock + "</td></tr>").prependTo("#stockTable > tbody");
+
+					var oldValue = $('#' + feed.stock.name + 'value').text();
+					var change = "-";
+
+					if(oldValue.length){
+						change = feed.stock.value - oldValue;
+					}
+
+					var changeTd = "<td>" + change + "</td>";
+
+					if(change > 0){
+						changeTd = "<td style=\"color:green\">+" + change + "</td>";
+					}
+					else if(change < 0){
+						changeTd = "<td style=\"color:red\">" + change + "</td>";
+					}
+					
+					var row = $("<tr id=\"" + feed.stock.name + "\">"+
+							"<td id=\"stockTD\">" + feed.stock.name + "</td>"+
+							"<td id=\"" + feed.stock.name + "value\">" + feed.stock.value + "</td>" + 
+							"<td>" + feed.stock.currency + "</td>" + 
+							"<td>" + msg.headers.from + "</td>" +
+							"<td>" + clock + "</td>" +
+							changeTd + 
+					"</tr>");
+
+					var oldRow = $('#' + feed.stock.name);
+
+					if(oldRow.length){
+						//If existing...
+						oldRow.replaceWith(row);
+					}
+					else{
+						//If non-existing in table...
+						row.prependTo("#stockTable > tbody");
+					}
 				}
 	  }
 	
@@ -50,7 +85,7 @@
 	      //Stomple.debug = true;
 		  var client = Stomple.create_client({
 			  url: "ws://localhost:61614/stomp",
-			  destination: "/topic/web",
+			  destination: topicName,
 			  login: "guest",
 			  passcode: "guest",
 				socketOpen: function() {
@@ -78,7 +113,7 @@
 	
 	  function disconnect() {
 		  client.unsubscribe({
-			  			destination: "/topic/web"
+			  			destination: topicName
 				  });
 		  client.disconnect({success: function(){console.log("dis");}, failure: function(){console.log(42);}});
 		  alert('Disconnected');
@@ -98,7 +133,8 @@
 				thisObj: msgHandler,
 				options: {
 			         	     headers: {
-				         	     selector: selectorString
+				         	     selector: selectorString,
+				         	     "activemq.retroactive": true
 			                 }
 			             },
 
