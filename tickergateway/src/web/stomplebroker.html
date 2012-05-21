@@ -9,7 +9,7 @@
     <script type="text/javascript" src="js/stomple.js"></script>    
 </head>
 <body><p>
-	<label for="inputText">Subscribe to: </label>
+	<label for="inputText">Subscribe to stock: </label>
 		<input type="text" id="inputText">
 	<br>
 	<button id="disBtn" onclick='disconnect();'>Disconnect</button>
@@ -33,10 +33,7 @@
 	</div>
 	<script type="text/javascript">
 
-	  var topicName = "/topic/web.>";
-
-	  	
-	  var msgHandler = {
+		var msgHandler = {
 				fn: function(msg) {
 					var clock = formatDate(new Date(), '%H:%m:%s');
 					var feed = JSON.parse(msg.body);
@@ -85,7 +82,6 @@
 	      //Stomple.debug = true;
 		  var client = Stomple.create_client({
 			  url: "ws://localhost:61614/stomp",
-			  destination: topicName,
 			  login: "guest",
 			  passcode: "guest",
 				socketOpen: function() {
@@ -113,7 +109,7 @@
 	
 	  function disconnect() {
 		  client.unsubscribe({
-			  			destination: topicName
+			  			//destination: topicName
 				  });
 		  client.disconnect({success: function(){console.log("dis");}, failure: function(){console.log(42);}});
 		  alert('Disconnected');
@@ -121,11 +117,10 @@
 	  
 	  function subscribe(){
 
-		  var selectorString = "stock IS NOT NULL";
-		  var stock = $('#inputText').val()
-		  if(stock){
-			  	
-				selectorString = "stock='" + stock + "'";
+		  var topicName = "/topic/web.>";
+		  var stockSubscription = $('#inputText').val();
+		  if(stockSubscription.length){
+			  var topicName = "/topic/web." + stockSubscription;
 		  }
 		  
 		  client.subscribe({
@@ -133,7 +128,7 @@
 				thisObj: msgHandler,
 				options: {
 			         	     headers: {
-				         	     selector: selectorString,
+				         	     destination: topicName,
 				         	     "activemq.retroactive": true
 			                 }
 			             },

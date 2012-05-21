@@ -1057,7 +1057,18 @@
                 case "MESSAGE":
                 	console.log("received message")
                     //subs = this.subscribers[headers.destination];
-                	subs = this.subscribers["/topic/web.>"];
+                	
+                	//Hack to get first subscription
+                	var subs;
+                	for (var i in this.subscribers) {
+                	    if (this.subscribers.hasOwnProperty(i) && typeof(i) !== 'function') {
+                	        subs = this.subscribers[i];
+                	        break;
+                	    }
+                	}
+                	//End of hack
+                	
+                	console.log(this.subscribers.length);
                 	console.log("subscribers: " + this.subscribers)
                     if (subs) {
                     	console.log("subscribers found : " + subs)
