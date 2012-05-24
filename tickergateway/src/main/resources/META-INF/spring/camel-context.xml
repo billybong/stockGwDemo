@@ -21,20 +21,14 @@
 				<setHeader headerName="from">
 					<constant>Reuters</constant>
 				</setHeader>
-				<to uri="activemq:ticker" />
+				<to uri="activemq:ticker"/>
 			</split>
 		</route>
 	</camelContext>
 
 	<!-- A pooling-based JMS provider -->
 	<bean id="jmsConnectionFactory" class="org.apache.activemq.pool.PooledConnectionFactory" destroy-method="stop">
-		<property name="connectionFactory">
-			<bean class="org.apache.activemq.ActiveMQConnectionFactory">
-				<property name="brokerURL">
-					<value>tcp://localhost:61616</value>
-				</property>
-			</bean>
-		</property>
+		<constructor-arg value="tcp://localhost:61616"/>
 	</bean>
 
 	<!-- Camel component for JMS/ActiveMQ -->

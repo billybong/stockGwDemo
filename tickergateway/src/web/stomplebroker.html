@@ -8,10 +8,11 @@
     <script type="text/javascript" src='js/jquery.js'></script>
     <script type="text/javascript" src="js/stomple.js"></script>    
 </head>
-<body><p>
+<body>
 	<label for="inputText">Subscribe to stock: </label>
 		<input type="text" id="inputText">
-	<br>
+	<br/>
+	<div id="subscriptionReport" style="color:green;"><br/></div>
 	<button id="disBtn" onclick='disconnect();'>Disconnect</button>
 	<button id="cntBtn" onclick='subscribe();'>Subscribe</button>
 	<div id="content">
@@ -80,8 +81,15 @@
 		  alert("Your browser doesn't support Stomple. Google Chrome does.");
 	  } else {
 	      //Stomple.debug = true;
+	      
+	      var host = "localhost";
+	      if(window.location.hostname.length){
+			host = window.location.hostname
+		  }
+	      
 		  var client = Stomple.create_client({
-			  url: "ws://localhost:61614/stomp",
+
+			  url: "ws://" + host + ":61614/stomp",
 			  login: "guest",
 			  passcode: "guest",
 				socketOpen: function() {
@@ -112,7 +120,8 @@
 			  			//destination: topicName
 				  });
 		  client.disconnect({success: function(){console.log("dis");}, failure: function(){console.log(42);}});
-		  alert('Disconnected');
+		  $('#subscriptionReport').html('Disconnected...');
+		  $('#stockTable tr:not(:first)').remove();
 	  }
 	  
 	  function subscribe(){
@@ -135,6 +144,7 @@
 
 				success: function() {//did subscription succeed?
 					console.log("sub ok..");
+					$('#subscriptionReport').html('Subscribing to ' + topicName);
 				},
 				failure: function(reason) {//did subscription fail?
 					console.log(reason);

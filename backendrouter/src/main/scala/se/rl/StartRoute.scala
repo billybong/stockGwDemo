@@ -9,6 +9,8 @@ import scala.collection.JavaConversions._
 
 /**
  * A Main to run Camel
+ * 
+ * RouteBuilderSupport adds implicit type conversion between Scala RouteBuilders to Java ones
  */
 object StartRoute extends RouteBuilderSupport {
 
@@ -20,7 +22,7 @@ object StartRoute extends RouteBuilderSupport {
     //Add activeMQ component
     main.getCamelContexts().foreach(_.addComponent("activemq", ActiveMQComponent.activeMQComponent("tcp://localhost:61616")));
     
-    //Add our routes
+    //Add our routes, works as RouteBuilderSupport implicitly type converts between Scala DSL -> Java DSL
     main.addRouteBuilder(new BackEndrouter)
     
     // must use run to start the main application

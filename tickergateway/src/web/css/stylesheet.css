@@ -1,3 +1,5 @@
+body { background-image:url(../img/bg.png);background-repeat:repeat-x; }
+
 #stockTable {
 	width: 100% border:  1px solid #B0B0B0;
 }
@@ -10,7 +12,7 @@
 	outline: 0;
 	font-size: 100%;
 	vertical-align: baseline;
-	background: transparent;
+	background: white;
 }
 
 #stockTable thead {
@@ -35,5 +37,5 @@
 }
 
 #stockTable tr:nth-child(even) {
-	background: #F2F2F2;
+	background: #F0F0F0;
 }
