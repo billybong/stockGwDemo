@@ -22,7 +22,8 @@ object StartRoute extends RouteBuilderSupport {
     //Add activeMQ component
     main.getCamelContexts().foreach(_.addComponent("activemq", ActiveMQComponent.activeMQComponent("tcp://localhost:61616")));
     
-    //Add our routes, works as RouteBuilderSupport implicitly type converts between Scala DSL -> Java DSL
+    //Add our routes. 
+    //Works as RouteBuilderSupport implicitly type converts between Scala DSL -> Java DSL
     main.addRouteBuilder(new BackEndrouter)
     
     // must use run to start the main application

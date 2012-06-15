@@ -27,6 +27,8 @@ class BackEndrouter extends RouteBuilder {
     to("activemq:topic:dummy") //name dummy is never used. Header is inspected instead
   }
 
+  
+  //Camel 2.10 includes XML-JSON data format for automatic (un)marshalling
   def xmlToJson(e: Exchange): String = {
     val xml = e.getIn().getBody(classOf[Node])
 
@@ -34,7 +36,8 @@ class BackEndrouter extends RouteBuilder {
       "stock" ->
         ("name" -> (xml \ "stockName").text) ~
         ("value" -> (xml \\ "current").text) ~
-        ("currency" -> (xml \\ "@currency").text)))
+        ("currency" -> (xml \\ "@currency").text)
+    ))
   }
 }
 

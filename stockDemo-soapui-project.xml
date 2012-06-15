@@ -62,10 +62,10 @@
    <soapenv:Header/>
    <soapenv:Body>
       <ser:TransmitStockUpdate>
-         <ser:Feed timestamp="2012-04-08:10.00.00" currency="SEK" symbol="GOOG">
+         <ser:Feed timestamp="2012-04-08:10.00.00" currency="SEK" symbol="ERIC">
             <ser:dailyLow>5</ser:dailyLow>
             <ser:dailyHigh>40</ser:dailyHigh>
-            <ser:current>70</ser:current>
+            <ser:current>35</ser:current>
          </ser:Feed>
       </ser:TransmitStockUpdate>
    </soapenv:Body>

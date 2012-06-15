@@ -21,8 +21,13 @@
 				<setHeader headerName="from">
 					<constant>Reuters</constant>
 				</setHeader>
-				<to uri="activemq:ticker"/>
+				<to uri="direct:aggregation"/>
 			</split>
+		</route>
+		
+		<route id="Aggregation">
+			<from uri="direct:aggregation"/>
+			<to uri="activemq:ticker"/>
 		</route>
 	</camelContext>
 

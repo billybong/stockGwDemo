@@ -52,7 +52,7 @@ public class NasdaqRouteTest extends CamelTestSupport {
     protected RouteBuilder createRouteBuilder() throws Exception {
         NasdaqWsRoute route = new NasdaqWsRoute();
         route.setWsEndpoint(MOCK_FROM);
-        route.setAmqEndpoint(MOCK_TO);
+        route.setToEndpoint(MOCK_TO);
         return route;
     }
 }
